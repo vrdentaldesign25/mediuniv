@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Universe - Healthcare Appointment Booking</title>
+    <style>
+        :root {
+            --color-primary: #1e7874;
+            --color-primary-hover: #165c5a;
+            --color-secondary: #14919b;
+            --color-accent: #2db5bf;
+            --color-light: #f0f9f9;
+            --color-white: #ffffff;
+            --color-text: #1f2937;
+            --color-text-light: #6b7280;
+            --color-border: #e5e7eb;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-white);
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .logo::before {
+            content: '🏥';
+            font-size: 28px;
+        }
+
+        nav {
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+            min-width: 100%;
+            order: 3;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .role-switch {
+            color: var(--color-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            padding: var(--spacing-xs) var(--spacing-md);
+            background-color: rgba(30, 120, 116, 0.05);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .role-switch:hover {
+            background-color: rgba(30, 120, 116, 0.1);
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-light);
+            border-color: var(--color-primary);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background: linear-gradient(135deg, #f0f9f9 0%, rgba(30, 120, 116, 0.05) 100%);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-primary);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            color: var(--color-white);
+            text-align: center;
+            font-size: 80px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== BENEFITS SECTION ===== */
+        .benefits {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-white);
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .benefit-card {
+            padding: var(--spacing-xl);
+            background-color: var(--color-light);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(30, 120, 116, 0.1);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-accent);
+        }
+
+        .benefit-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .benefit-card h3 {
+            font-size: 18px;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .benefit-card p {
+            color: var(--color-text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-light);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .step {
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            text-align: center;
+            position: relative;
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .step h3 {
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+            font-size: 18px;
+        }
+
+        .step p {
+            color: var(--color-text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== TRUST & SAFETY ===== */
+        .trust-safety {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-white);
+        }
+
+        .trust-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+            align-items: center;
+        }
+
+        .trust-visual {
+            background: linear-gradient(135deg, rgba(20, 145, 155, 0.1), rgba(45, 181, 191, 0.1));
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            font-size: 80px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trust-text h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-lg);
+            font-size: 28px;
+        }
+
+        .trust-text p {
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .trust-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .trust-feature {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: flex-start;
+        }
+
+        .trust-feature::before {
+            content: '✓';
+            color: var(--color-success);
+            font-weight: 700;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .trust-feature p {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-light);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .testimonial-card {
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stars {
+            color: var(--color-warning);
+            font-size: 16px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .testimonial-text {
+            color: var(--color-text);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: var(--spacing-md);
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 14px;
+        }
+
+        .testimonial-role {
+            font-size: 12px;
+            color: var(--color-text-light);
+        }
+
+        /* ===== FEATURES SECTION (Doctor Page) ===== */
+        .features {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .feature-card {
+            padding: var(--spacing-xl);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-card h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+            font-size: 18px;
+        }
+
+        .feature-card p {
+            color: var(--color-text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== ROI SECTION (Doctor Page) ===== */
+        .roi {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background: linear-gradient(135deg, rgba(30, 120, 116, 0.05) 0%, rgba(45, 181, 191, 0.05) 100%);
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .roi-card {
+            background-color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+
+        .roi-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .roi-card p {
+            color: var(--color-text-light);
+            font-size: 14px;
+        }
+
+        /* ===== PRICING SECTION (Doctor Page) ===== */
+        .pricing {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-white);
+        }
+
+        .pricing-intro {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-2xl);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .pricing-card {
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+            font-size: 20px;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .price-period {
+            color: var(--color-text-light);
+            font-size: 14px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .features-list {
+            text-align: left;
+            margin: var(--spacing-lg) 0;
+            font-size: 14px;
+        }
+
+        .features-list li {
+            padding: var(--spacing-sm) 0;
+            color: var(--color-text-light);
+            list-style: none;
+            position: relative;
+            padding-left: var(--spacing-lg);
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: 700;
+        }
+
+        /* ===== FAQ SECTION ===== */
+        .faq {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background-color: var(--color-light);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--color-white);
+            margin-bottom: var(--spacing-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--color-primary);
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background-color: rgba(30, 120, 116, 0.05);
+        }
+
+        .faq-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+            color: var(--color-text-light);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* ===== FINAL CTA SECTION ===== */
+        .final-cta {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: var(--color-white);
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 32px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .final-cta p {
+            font-size: 16px;
+            margin-bottom: var(--spacing-lg);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.95;
+        }
+
+        .final-cta .btn {
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .final-cta .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .secondary-link {
+            margin-top: var(--spacing-lg);
+            display: inline-block;
+            color: var(--color-white);
+            text-decoration: underline;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .secondary-link:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background-color: var(--color-text);
+            color: var(--color-white);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .logo {
+                font-size: 18px;
+                order: 1;
+            }
+
+            .logo::before {
+                font-size: 24px;
+            }
+
+            .nav-buttons {
+                order: 2;
+                gap: var(--spacing-xs);
+            }
+
+            .btn {
+                padding: var(--spacing-xs) var(--spacing-md);
+                font-size: 12px;
+            }
+
+            nav {
+                order: 3;
+                flex-basis: 100%;
+                gap: var(--spacing-md);
+                font-size: 12px;
+                margin-top: var(--spacing-md);
+            }
+
+            nav a {
+                font-size: 12px;
+            }
+
+            .role-switch {
+                font-size: 11px;
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .hero-visual {
+                min-height: 200px;
+                font-size: 60px;
+            }
+
+            .trust-content {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-visual {
+                min-height: 200px;
+                font-size: 60px;
+            }
+
+            .benefits-grid,
+            .testimonials-grid,
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .final-cta h2 {
+                font-size: 24px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+
+            .logo {
+                font-size: 16px;
+            }
+
+            .logo::before {
+                font-size: 20px;
+            }
+
+            .btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            nav {
+                gap: var(--spacing-sm);
+                font-size: 11px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            .role-switch {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+        }
+
+        /* Hidden page display */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- SHARED HEADER -->
+    <header>
+        <div class="header-container">
+            <a href="https://www.mediuniv.com" class="logo">Medical Universe</a>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#faq">Help / FAQ</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="#" class="btn btn-secondary">Sign In</a>
+                <a href="#" class="btn btn-primary">Get Started</a>
+                <a id="roleSwitch" href="#" class="role-switch">For Doctors →</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE 1: PATIENT LANDING PAGE -->
+    <div id="patientPage" class="page active">
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Book Your Doctor Appointment in Seconds</h1>
+                    <p>No phone calls. No waiting. Find trusted doctors near you and book your appointment instantly, 24/7. Medical Universe connects you to verified healthcare providers across India.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="alert('Book appointment modal opens here')">Book Your Appointment</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('patientHow').scrollIntoView({behavior: 'smooth'})">See How It Works</button>
+                    </div>
+                </div>
+                <div class="hero-visual">📱</div>
+            </div>
+        </section>
+
+        <!-- BENEFITS -->
+        <section class="benefits">
+            <div class="section-container">
+                <h2 class="section-title">Why Choose Medical Universe</h2>
+                <p class="section-subtitle">Designed for patients who value their time and health</p>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🔍</div>
+                        <h3>Find the Right Doctor in Minutes</h3>
+                        <p>Search by symptom, specialty, or location. Compare ratings and experience to choose the best match for your needs.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚡</div>
+                        <h3>Instant Online Booking</h3>
+                        <p>No phone calls or waiting on hold. Select your preferred time slot and confirm your appointment instantly.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🔔</div>
+                        <h3>Smart Reminders</h3>
+                        <p>Automatic SMS and email reminders ensure you never miss a visit. Get alerts 1 day and 1 hour before your appointment.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📋</div>
+                        <h3>Your Health Records</h3>
+                        <p>Secure access to your appointment history, prescriptions, and medical documents all in one place.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="how-it-works" id="patientHow">
+            <div class="section-container">
+                <h2 class="section-title">Your Appointment in 4 Simple Steps</h2>
+                <div class="steps">
+                    <div class="step" data-step="1">
+                        <h3>Search & Filter</h3>
+                        <p>Enter your symptom or specialty and location to find available doctors instantly.</p>
+                    </div>
+                    <div class="step" data-step="2">
+                        <h3>Compare & Select</h3>
+                        <p>View doctor profiles, ratings, fees, and available time slots. Pick the one that suits you best.</p>
+                    </div>
+                    <div class="step" data-step="3">
+                        <h3>Confirm & Remind</h3>
+                        <p>Complete booking with payment. Receive instant confirmation and automatic reminders via SMS & email.</p>
+                    </div>
+                    <div class="step" data-step="4">
+                        <h3>Attend Visit</h3>
+                        <p>Visit the clinic or join your online consultation via video link. Your health records are always accessible.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRUST & SAFETY -->
+        <section class="trust-safety">
+            <div class="section-container">
+                <div class="trust-content">
+                    <div class="trust-visual">🔒</div>
+                    <div class="trust-text">
+                        <h2>Your Health, Our Priority</h2>
+                        <p>We protect your personal and medical information with industry-leading encryption and HIPAA compliance standards.</p>
+                        <div class="trust-features">
+                            <div class="trust-feature">
+                                <p><strong>End-to-End Encryption:</strong> All data is encrypted and secure</p>
+                            </div>
+                            <div class="trust-feature">
+                                <p><strong>Verified Doctors:</strong> All healthcare providers are thoroughly verified and licensed</p>
+                            </div>
+                            <div class="trust-feature">
+                                <p><strong>Data Privacy:</strong> Your information is never shared without consent</p>
+                            </div>
+                            <div class="trust-feature">
+                                <p><strong>24/7 Support:</strong> Dedicated support team available round the clock</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="testimonials">
+            <div class="section-container">
+                <h2 class="section-title">Loved by Patients</h2>
+                <p class="section-subtitle">Real stories from patients who trust Medical Universe</p>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"I was able to book an appointment with a dermatologist in 2 minutes instead of calling around for hours on Medical Universe. The reminders were super helpful!"</p>
+                        <p class="testimonial-author">Priya Sharma</p>
+                        <p class="testimonial-role">Patient, Mumbai</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"No more missed appointments because of work. The automatic reminders keep me on track. Absolutely recommend Medical Universe to everyone!"</p>
+                        <p class="testimonial-author">Rajesh Patel</p>
+                        <p class="testimonial-role">Patient, Bangalore</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"My entire health history in one place on Medical Universe. Made my consultation so much smoother. The doctors appreciate having my records ready!"</p>
+                        <p class="testimonial-author">Ananya Gupta</p>
+                        <p class="testimonial-role">Patient, Delhi</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq" id="faq">
+            <div class="section-container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Is booking an appointment free for patients?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Yes! Booking is completely free for patients. You only pay for the consultation itself, which goes to the healthcare provider.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Do I need to call the clinic after booking?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Not at all! Your booking is confirmed instantly. You'll receive SMS and email confirmations, and the clinic has your appointment details automatically.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Can I reschedule or cancel my appointment?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Yes, you can reschedule or cancel up to 2 hours before your appointment through the app. Cancellation policies may vary by clinic.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>What payment methods do you accept?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                We accept all major credit cards, debit cards, mobile wallets (Google Pay, Apple Pay), and UPI payments for maximum convenience.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Is my personal health information secure?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Absolutely. We use hospital-grade encryption and comply with HIPAA standards. Your data is never shared without your explicit consent.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Can I book online consultations through MediBook?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Yes! Many doctors on our platform offer online consultations via video call. You can filter by consultation type when searching.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA - PATIENT -->
+        <section class="final-cta">
+            <div class="section-container">
+                <h2>Book Your First Appointment in Just 2 Minutes</h2>
+                <p>Stop waiting, start healing. Join thousands of patients who trust Medical Universe for convenient healthcare booking. Visit www.mediuniv.com to get started today.</p>
+                <button class="btn" onclick="alert('Sign up modal opens here')">Book Your Appointment Now</button>
+                <div class="secondary-link" onclick="document.getElementById('roleSwitch').click();">Are you a doctor? <strong>Learn more</strong></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PAGE 2: DOCTOR LANDING PAGE -->
+    <div id="doctorPage" class="page">
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Grow Your Practice & Fill Your Schedule</h1>
+                    <p>Get discovered by more patients. Reduce no-shows with automated reminders. Manage all appointments in one dashboard.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="alert('Doctor signup modal opens here')">Get Started as a Doctor</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('doctorHow').scrollIntoView({behavior: 'smooth'})">Book a Demo</button>
+                    </div>
+                </div>
+                <div class="hero-visual">👨‍⚕️</div>
+            </div>
+        </section>
+
+        <!-- BENEFITS -->
+        <section class="benefits">
+            <div class="section-container">
+                <h2 class="section-title">Why Doctors Love Medical Universe</h2>
+                <p class="section-subtitle">Grow your patient base while saving time on administration</p>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📈</div>
+                        <h3>Get Discovered by More Patients</h3>
+                        <p>Increase your visibility in your area. Patients searching for your specialty can find and book with you instantly.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📞</div>
+                        <h3>Reduce No-Shows</h3>
+                        <p>Automated reminders decrease no-shows by up to 40%. Get more reliable scheduling and predictable revenue.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📊</div>
+                        <h3>One Dashboard for Everything</h3>
+                        <p>Manage all your appointments, patient records, and schedules from a single, intuitive dashboard.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⏱️</div>
+                        <h3>Control Your Availability</h3>
+                        <p>Set your schedule, fees, and consultation types in seconds. Update availability in real-time without calling staff.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="how-it-works" id="doctorHow">
+            <div class="section-container">
+                <h2 class="section-title">Get Started in 4 Steps</h2>
+                <div class="steps">
+                    <div class="step" data-step="1">
+                        <h3>Create Profile</h3>
+                        <p>Set up your profile with clinic details, qualifications, and specialties. Takes just 5 minutes.</p>
+                    </div>
+                    <div class="step" data-step="2">
+                        <h3>Set Your Schedule</h3>
+                        <p>Define consultation types, fees, and your availability. Update anytime from your dashboard.</p>
+                    </div>
+                    <div class="step" data-step="3">
+                        <h3>Patients Book You</h3>
+                        <p>Patients find you and book directly into your calendar. You get instant notifications for each booking.</p>
+                    </div>
+                    <div class="step" data-step="4">
+                        <h3>Manage & Grow</h3>
+                        <p>Track visits, view patient history, export reports. Get insights to improve your practice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features" id="features">
+            <div class="section-container">
+                <h2 class="section-title">Powerful Tools for Your Practice</h2>
+                <p class="section-subtitle">Everything you need to run a modern healthcare practice</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3>Smart Calendar</h3>
+                        <p>Intuitive calendar management with drag-and-drop scheduling, multiple clinic support, and time slot customization.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Patient History</h3>
+                        <p>Complete patient visit history, medical records, prescriptions, and follow-up notes at your fingertips.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏥</div>
+                        <h3>Multi-Location Support</h3>
+                        <p>Manage multiple clinics from one account. Keep each location's schedule and staff organized separately.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3>EHR Integration</h3>
+                        <p>Connect with your existing calendar, email, and EHR systems. Sync data automatically without manual entry.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍💼</div>
+                        <h3>Staff Management</h3>
+                        <p>Give your receptionist or staff members secure access. Set permissions for who can manage what.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Analytics & Reports</h3>
+                        <p>Track no-shows, revenue, patient demographics, and appointment trends with detailed analytics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI SECTION -->
+        <section class="roi">
+            <div class="section-container">
+                <h2 class="section-title">Proven Results for Healthcare Providers</h2>
+                <p class="section-subtitle">See the impact MediBook brings to your practice</p>
+                <div class="roi-grid">
+                    <div class="roi-card">
+                        <div class="roi-number">40%</div>
+                        <p><strong>Reduction in No-Shows</strong> with automated reminders</p>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-number">3x</div>
+                        <p><strong>Faster Scheduling</strong> compared to phone bookings</p>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-number">2 Hours/Week</div>
+                        <p><strong>Time Saved</strong> on administrative tasks</p>
+                    </div>
+                    <div class="roi-card">
+                        <div class="roi-number">60%+</div>
+                        <p><strong>Increase in Patient Base</strong> in first 3 months</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="testimonials">
+            <div class="section-container">
+                <h2 class="section-title">Trusted by Healthcare Providers</h2>
+                <p class="section-subtitle">See what doctors are saying about Medical Universe</p>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"Medical Universe has transformed how I manage my clinic. No more phone calls, no more missed appointments. My patients love the ease of booking!"</p>
+                        <p class="testimonial-author">Dr. Anil Kumar</p>
+                        <p class="testimonial-role">Orthopedic Surgeon, Chennai</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"I've seen a 50% increase in my patient base since joining Medical Universe. The analytics help me understand my practice better and optimize my schedule."</p>
+                        <p class="testimonial-author">Dr. Kavya Singh</p>
+                        <p class="testimonial-role">General Physician, Pune</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"Finally, a tool that reduces admin work and brings in more patients. My receptionist now has time to focus on actual patient care. Medical Universe is a game-changer!"</p>
+                        <p class="testimonial-author">Dr. Vikram Reddy</p>
+                        <p class="testimonial-role">Dentist, Hyderabad</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section class="pricing" id="pricing">
+            <div class="section-container">
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <div class="pricing-intro">
+                    <p>Choose a plan that scales with your practice. Patient bookings are free. Pay only for the tools you use.</p>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <div class="price">₹999</div>
+                        <div class="price-period">per month</div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: var(--spacing-lg);">Get Started</button>
+                        <ul class="features-list">
+                            <li>Up to 100 patient bookings/month</li>
+                            <li>1 Doctor profile</li>
+                            <li>Basic calendar management</li>
+                            <li>Patient reminders (SMS/Email)</li>
+                            <li>Visit history & notes</li>
+                            <li>Email support</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card featured">
+                        <h3>Professional</h3>
+                        <div class="price">₹2,499</div>
+                        <div class="price-period">per month</div>
+                        <button class="btn btn-primary" style="width: 100%; margin-bottom: var(--spacing-lg);">Most Popular</button>
+                        <ul class="features-list">
+                            <li>Unlimited patient bookings</li>
+                            <li>Up to 3 doctor profiles</li>
+                            <li>Multi-location support</li>
+                            <li>Advanced calendar features</li>
+                            <li>Staff access & permissions</li>
+                            <li>Analytics & reports</li>
+                            <li>Priority support</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <div class="price-period">contact us</div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: var(--spacing-lg);">Contact Sales</button>
+                        <ul class="features-list">
+                            <li>Everything in Professional</li>
+                            <li>Unlimited doctor profiles</li>
+                            <li>EHR integration</li>
+                            <li>API access</li>
+                            <li>Dedicated account manager</li>
+                            <li>Custom branding</li>
+                            <li>24/7 phone support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq" id="faq">
+            <div class="section-container">
+                <h2 class="section-title">Doctor Questions Answered</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Do I need a dedicated receptionist to use MediBook?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                No! You can manage everything yourself, or give your receptionist access with specific permissions. The platform is designed to work with or without support staff.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Can I sync MediBook with my existing calendar?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Yes! We support integration with Google Calendar, Outlook, and other popular calendar systems. Your schedule stays in sync automatically.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Is patient data secure on MediBook?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Absolutely. We comply with HIPAA standards and use hospital-grade encryption for all data. Your patient information is protected at the highest level.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>What happens to patient data if I cancel my subscription?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Your data is yours. If you cancel, we'll provide you with a complete export of all patient records within 30 days. You can also migrate to another system anytime.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>How much commission does MediBook take from consultations?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                MediBook doesn't take any commission on consultation fees. You keep 100% of what patients pay. We only charge a monthly subscription for the platform.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Can I customize my clinic's page on MediBook?</span>
+                            <div class="faq-toggle">▼</div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Yes! You can fully customize your profile with your clinic logo, photos, biography, specialties, and services. Enterprise plans support full white-label customization.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA - DOCTOR -->
+        <section class="final-cta">
+            <div class="section-container">
+                <h2>Start Your Free Trial Today</h2>
+                <p>No credit card required. Set up in 5 minutes. See how Medical Universe can transform your practice and bring more patients to your door. Visit www.mediuniv.com to start your free trial.</p>
+                <button class="btn" onclick="alert('Doctor signup modal opens here')">Onboard Your Clinic Now</button>
+                <div class="secondary-link" onclick="document.getElementById('roleSwitch').click();">Want to see what patients experience? <strong>View the patient page</strong></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+            </div>
+            <p>&copy; 2024 Medical Universe. All rights reserved. Crafted with ❤️ for better healthcare. Visit us at <a href="https://www.mediuniv.com" style="color: var(--color-white); text-decoration: underline;">www.mediuniv.com</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.closest('.faq-item');
+                item.classList.toggle('active');
+            });
+        });
+
+        // Role switch - toggle between patient and doctor pages
+        document.getElementById('roleSwitch').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const patientPage = document.getElementById('patientPage');
+            const doctorPage = document.getElementById('doctorPage');
+            const roleSwitch = document.getElementById('roleSwitch');
+            
+            if (patientPage.classList.contains('active')) {
+                // Switch to doctor page
+                patientPage.classList.remove('active');
+                doctorPage.classList.add('active');
+                roleSwitch.textContent = '← For Patients';
+            } else {
+                // Switch to patient page
+                doctorPage.classList.remove('active');
+                patientPage.classList.add('active');
+                roleSwitch.textContent = 'For Doctors →';
+            }
+            
+            // Scroll to top smoothly
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // Scroll animations (optional enhancement)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.benefit-card, .step, .testimonial-card, .feature-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
